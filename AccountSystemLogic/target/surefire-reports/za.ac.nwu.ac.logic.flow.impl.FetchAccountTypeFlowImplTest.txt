@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: za.ac.nwu.ac.logic.flow.impl.FetchAccountTypeFlowImplTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.641 s - in za.ac.nwu.ac.logic.flow.impl.FetchAccountTypeFlowImplTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.497 s - in za.ac.nwu.ac.logic.flow.impl.FetchAccountTypeFlowImplTest
