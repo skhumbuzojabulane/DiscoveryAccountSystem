@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountTransactionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AccountSystemWebSpringBoot</a> &gt; <a href="index.source.html" class="el_package">za.ac.nwu.ac.web.sb.controller</a> &gt; <span class="el_source">AccountTransactionController.java</span></div><h1>AccountTransactionController.java</h1><pre class="source lang-java linenums">package za.ac.nwu.ac.web.sb.controller;
+
+
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import za.ac.nwu.ac.domain.dto.AccountTransactionDto;
+import za.ac.nwu.ac.domain.service.GeneralResponse;
+import za.ac.nwu.ac.logic.flow.CreateAccountTransactionFlow;
+import za.ac.nwu.ac.logic.flow.FetchAccountTransactionFlow;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;account-transaction&quot;)
+public class AccountTransactionController {
+
+    private final CreateAccountTransactionFlow createAccountTransactionFlow;
+    private final FetchAccountTransactionFlow fetchAccountTransactionFlow;
+
+    @Autowired
+    public AccountTransactionController(CreateAccountTransactionFlow createAccountTransactionFlow,
+<span class="nc" id="L28">                                        FetchAccountTransactionFlow fetchAccountTransactionFlow){</span>
+<span class="nc" id="L29">        this.createAccountTransactionFlow = createAccountTransactionFlow;</span>
+<span class="nc" id="L30">        this.fetchAccountTransactionFlow = fetchAccountTransactionFlow;</span>
+<span class="nc" id="L31">    }</span>
+
+    @PostMapping(&quot;&quot;)
+    @ApiOperation(value = &quot;Create a new AccountTransaction.&quot;, notes = &quot;Creates a new AccountTransaction in the Database.&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = &quot;The AccountTransaction was created successfully&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 400, message = &quot;Bad Request&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 500, message = &quot;Internal Server Error&quot;, response = GeneralResponse.class)})
+    public ResponseEntity&lt;GeneralResponse&lt;AccountTransactionDto&gt;&gt; create(
+            @ApiParam(value = &quot;Request body to create a new AccountTransaction.&quot;,
+                    required = true)
+            @RequestBody AccountTransactionDto AccountTransaction){
+<span class="nc" id="L43">        AccountTransactionDto accountTransactionResponse = createAccountTransactionFlow.create(AccountTransaction);</span>
+<span class="nc" id="L44">        GeneralResponse&lt;AccountTransactionDto&gt; response = new GeneralResponse&lt;&gt;(true, accountTransactionResponse);</span>
+<span class="nc" id="L45">        return new ResponseEntity&lt;&gt;(response, HttpStatus.CREATED);</span>
+    }
+
+    @GetMapping(&quot;/all&quot;)
+    @ApiOperation(value = &quot;Gets all the configured Account types.&quot;, notes = &quot;Returns a list of amount types&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;Account types returned&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 400, message = &quot;Bad Request&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 404, message = &quot;Not found&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 500, message = &quot;Internal Server Error&quot;, response = GeneralResponse.class)})
+    public ResponseEntity&lt;GeneralResponse&lt;List&lt;AccountTransactionDto&gt;&gt;&gt; getAll() {
+<span class="nc" id="L56">        List&lt;AccountTransactionDto&gt; AccountTransactions = fetchAccountTransactionFlow.getAllAccountTransactions();</span>
+<span class="nc" id="L57">        GeneralResponse&lt;List&lt;AccountTransactionDto&gt;&gt; response = new GeneralResponse&lt;&gt;(true, AccountTransactions);</span>
+<span class="nc" id="L58">        return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;{transactionId}&quot;)
+    @ApiOperation(value = &quot;Fetches the specified AccountTransaction.&quot;, notes = &quot;Fetches the accountTransaction corresponding to the given transactionId.&quot;)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = &quot;AccountTransaction Found&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 400, message = &quot;Bad Request&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 404, message = &quot;Resource Not found&quot;, response = GeneralResponse.class),
+            @ApiResponse(code = 500, message = &quot;Internal Server Error&quot;, response = GeneralResponse.class)
+    })
+    public ResponseEntity&lt;GeneralResponse&lt;AccountTransactionDto&gt;&gt; getAllAccountTransactions(
+            @ApiParam(value = &quot;The transactionId that uniquely identifies the AccountTransaction.&quot;,
+                    example = &quot;50002&quot;,
+                    name = &quot;transactionId&quot;,
+                    required = true)
+            @PathVariable(&quot;transactionId&quot;) final Long transactionId){
+
+<span class="nc" id="L76">        AccountTransactionDto AccountTransaction = fetchAccountTransactionFlow.getAccountTransactionById(transactionId);</span>
+<span class="nc" id="L77">        GeneralResponse&lt;AccountTransactionDto&gt; response = new GeneralResponse&lt;&gt;(true, AccountTransaction);</span>
+<span class="nc" id="L78">        return new ResponseEntity&lt;&gt;(response, HttpStatus.OK);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.3.201901230119</span></div></body></html>
